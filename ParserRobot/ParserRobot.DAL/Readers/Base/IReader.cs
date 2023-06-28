@@ -4,6 +4,7 @@ namespace ParserRobot.DAL.Readers.Base
 {
     public interface IReader<T>
     {
-        T Read(string text);
+        bool IsCorrectData { get; set; }
+        List<T> Read(string text);
     }
 }

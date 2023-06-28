@@ -38,7 +38,7 @@ namespace ParserRobot.DAL.Writers
                 //xlsSheet[$"H1"].Value = "Ответственный";
             }
 
-            xlsWorkbook.SaveAs($"Reports/Report InternetAcquiring {DateTime.Now.ToShortDateString()}.xls");
+            xlsWorkbook.SaveAs($"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/Reports/Report InternetAcquiring {DateTime.Now.ToShortDateString()}.xls");
            
         }
     }
