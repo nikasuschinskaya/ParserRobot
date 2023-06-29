@@ -12,7 +12,7 @@ namespace ParserRobot.DAL.Readers
     {
         public bool IsCorrectData { get; set; }
 
-        public List<MerchantAcquiring> Read(string text)
+        public MerchantAcquiring Read(string text)
         {
             throw new NotImplementedException();
         }

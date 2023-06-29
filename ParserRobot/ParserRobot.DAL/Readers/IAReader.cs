@@ -9,8 +9,10 @@ namespace ParserRobot.DAL.Readers
 {
     public class IAReader : IReader<InternetAcquiring>
     {
+        //private List<InternetAcquiring> _result = new List<InternetAcquiring>();
         public bool IsCorrectData { get; set; }
-        public List<InternetAcquiring> Read(string text)
+
+        public InternetAcquiring Read(string text)
         {
             string unpPattern = @"УНП:\s+(\d+)\r?\n";
             string amountPerDayPattern = @"Сумма в день:\s+(\d+)\r?\n";
@@ -22,8 +24,6 @@ namespace ParserRobot.DAL.Readers
 
             string datePattern = @"(\d{2}) (\w+) (\d{4}) года";
 
-            List<InternetAcquiring> result = new List<InternetAcquiring>();
-
             MatchCollection matches = Regex.Matches(text, unpPattern + "|" + amountPerDayPattern + "|" + countPerDayPattern + "|" + amountPerMonthPattern + "|" + countPerMonthPattern + "|" + fullNamePattern + "|" + creationDatePattern);
 
             InternetAcquiring IA = new InternetAcquiring();
@@ -31,30 +31,14 @@ namespace ParserRobot.DAL.Readers
             foreach (Match match in matches)
             {
                 Match dateMatch = Regex.Match(match.Groups[7].Value, datePattern);
-                if (match.Groups[1].Success)
-                {
-                    IA.PayerAccountNumber = match.Groups[1].Value;
-                }
-                else if (match.Groups[2].Success)
-                {
-                    IA.AmountPerDay = decimal.Parse(match.Groups[2].Value);
-                }
-                else if (match.Groups[3].Success)
-                {
-                    IA.CountPerDay = int.Parse(match.Groups[3].Value);
-                }
-                else if (match.Groups[4].Success)
-                {
-                    IA.AmountPerMonth = decimal.Parse(match.Groups[4].Value);
-                }
-                else if (match.Groups[5].Success)
-                {
-                    IA.CountPerMonth = int.Parse(match.Groups[5].Value);
-                }
-                else if (match.Groups[6].Success)
-                {
-                    IA.FullName = match.Groups[6].Value;
-                }
+
+                if (match.Groups[1].Success) IA.PayerAccountNumber = match.Groups[1].Value;
+                else if (match.Groups[2].Success) IA.AmountPerDay = decimal.Parse(match.Groups[2].Value);
+                else if (match.Groups[3].Success) IA.CountPerDay = int.Parse(match.Groups[3].Value);
+                else if (match.Groups[4].Success) IA.AmountPerMonth = decimal.Parse(match.Groups[4].Value);
+                else if (match.Groups[5].Success) IA.CountPerMonth = int.Parse(match.Groups[5].Value);
+                else if (match.Groups[6].Success) IA.FullName = match.Groups[6].Value;
+                
                 else if(dateMatch.Success)
                 {
                     int day = int.Parse(dateMatch.Groups[1].Value);
@@ -65,15 +49,17 @@ namespace ParserRobot.DAL.Readers
                 }
             }
 
-            if (IA.PayerAccountNumber != null /*&& IA.AmountPerDay != 0 && IA.CountPerDay != 0 && IA.AmountPerMonth != 0 && IA.CountPerMonth != 0 && IA.FullName != null*/)
+            if (IA.PayerAccountNumber != null)
             {
-                result.Add(IA);
+                IsCorrectData = true;
+                return IA;
             }
+            else IsCorrectData = false;
 
-            if (result.Count == 0) IsCorrectData = false;
-            else IsCorrectData = true;
+            //if (_result.Count == 0) IsCorrectData = false;
+            //else IsCorrectData = true;
 
-            return result;
+            return null/*_result*/;
         }
 
         private int GetMonthNumber(string monthString)

@@ -4,17 +4,21 @@ using ParserRobot.DAL.Writers.Base;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ParserRobot.DAL.Writers
 {
     public class IAWriter : IWriter<InternetAcquiring>
     {
+        private int _widthForColumns = 3800;
+        private int _widthForAColumn = 20000;
+        private static string _dateString = DateTime.Now.ToShortDateString();
+        private string _pathForSaveExelFile = $"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/Reports/Reports IA/Report InternetAcquiring {_dateString}.xls";
+
         public void Write(List<InternetAcquiring> models)
         {
             WorkBook xlsWorkbook = WorkBook.Create(ExcelFileFormat.XLS);
             WorkSheet xlsSheet = xlsWorkbook.CreateWorkSheet("new_sheet");
+
             xlsSheet["A1"].Value = "Наименование";
             xlsSheet["B1"].Value = "УНП";
             xlsSheet["C1"].Value = "Дата создания";
@@ -25,7 +29,15 @@ namespace ParserRobot.DAL.Writers
             xlsSheet["H1"].Value = "Ответственный";
             xlsSheet["I1"].Value = "Статус";
 
-            for(int i = 0; i < models.Count(); i++)
+            xlsSheet.Columns[0].Width = _widthForAColumn;
+            xlsSheet.Columns[2].Width = _widthForColumns;
+            xlsSheet.Columns[3].Width = _widthForColumns;
+            xlsSheet.Columns[4].Width = _widthForColumns;
+            xlsSheet.Columns[5].Width = _widthForColumns;
+            xlsSheet.Columns[6].Width = _widthForColumns;
+            xlsSheet.Columns[7].Width = _widthForColumns;
+
+            for (int i = 0; i < models.Count(); i++)
             {
                 xlsSheet[$"A{i + 2}"].Value = models[i].FullName.ToString();
                 xlsSheet[$"B{i + 2}"].Value = models[i].PayerAccountNumber.ToString();
@@ -35,11 +47,9 @@ namespace ParserRobot.DAL.Writers
                 xlsSheet[$"F{i + 2}"].Value = models[i].AmountPerMonth.ToString();
                 xlsSheet[$"G{i + 2}"].Value = models[i].CountPerMonth.ToString();
                 xlsSheet[$"I{i + 2}"].Value = "работает";
-                //xlsSheet[$"H1"].Value = "Ответственный";
             }
 
-            xlsWorkbook.SaveAs($"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/Reports/Report InternetAcquiring {DateTime.Now.ToShortDateString()}.xls");
-           
+            xlsWorkbook.SaveAs(_pathForSaveExelFile);
         }
     }
 }

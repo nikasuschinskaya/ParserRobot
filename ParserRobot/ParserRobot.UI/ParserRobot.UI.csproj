@@ -121,6 +121,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Reports\Reports IA\Report InternetAcquiring 29.06.2023.xls" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -132,8 +133,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Errors\Errors 27.06.2023\" />
-    <Folder Include="Reports\" />
+    <Folder Include="Reports\Reports MA\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Errors\Errors 27.06.2023\РЕГИСТРАЦИЯ %28ONLINER.BY%29 ИЭError.txt" />
+    <Resource Include="Errors\Errors 27.06.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Errors\Errors 29.06.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
