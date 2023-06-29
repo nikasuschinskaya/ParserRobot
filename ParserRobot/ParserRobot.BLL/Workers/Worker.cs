@@ -47,7 +47,6 @@ namespace ParserRobot.BLL.Workers
 
             foreach (string file in IAfiles)
             {
-
                 AutoItX.Send("^f");
                 Thread.Sleep(_timeToOtherActions);
                 AutoItX.Send(file);
@@ -89,6 +88,16 @@ namespace ParserRobot.BLL.Workers
                 AutoItX.WinKill($"{file}");
 
             }
+
+            //Thread.Sleep(_timeToOtherActions);
+
+            //foreach (string file in MAfiles)
+            //{
+
+            //}
+
+
+
         }
     }
 }

@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\MonthNumberHelper.cs" />
     <Compile Include="ModelsDAO\InternetAcquiring.cs" />
     <Compile Include="ModelsDAO\MerchantAcquiring.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

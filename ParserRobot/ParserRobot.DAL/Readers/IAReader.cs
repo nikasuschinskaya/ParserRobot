@@ -1,15 +1,13 @@
-﻿using ParserRobot.DAL.ModelsDAO;
+﻿using ParserRobot.DAL.Helpers;
+using ParserRobot.DAL.ModelsDAO;
 using ParserRobot.DAL.Readers.Base;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Text.RegularExpressions;
 
 namespace ParserRobot.DAL.Readers
 {
     public class IAReader : IReader<InternetAcquiring>
     {
-        //private List<InternetAcquiring> _result = new List<InternetAcquiring>();
         public bool IsCorrectData { get; set; }
 
         public InternetAcquiring Read(string text)
@@ -24,7 +22,13 @@ namespace ParserRobot.DAL.Readers
 
             string datePattern = @"(\d{2}) (\w+) (\d{4}) года";
 
-            MatchCollection matches = Regex.Matches(text, unpPattern + "|" + amountPerDayPattern + "|" + countPerDayPattern + "|" + amountPerMonthPattern + "|" + countPerMonthPattern + "|" + fullNamePattern + "|" + creationDatePattern);
+            MatchCollection matches = Regex.Matches(text, unpPattern + "|" + 
+                                                          amountPerDayPattern + "|" + 
+                                                          countPerDayPattern + "|" + 
+                                                          amountPerMonthPattern + "|" + 
+                                                          countPerMonthPattern + "|" + 
+                                                          fullNamePattern + "|" + 
+                                                          creationDatePattern);
 
             InternetAcquiring IA = new InternetAcquiring();
 
@@ -38,13 +42,13 @@ namespace ParserRobot.DAL.Readers
                 else if (match.Groups[4].Success) IA.AmountPerMonth = decimal.Parse(match.Groups[4].Value);
                 else if (match.Groups[5].Success) IA.CountPerMonth = int.Parse(match.Groups[5].Value);
                 else if (match.Groups[6].Success) IA.FullName = match.Groups[6].Value;
-                
-                else if(dateMatch.Success)
+
+                else if (dateMatch.Success)
                 {
                     int day = int.Parse(dateMatch.Groups[1].Value);
                     string monthString = dateMatch.Groups[2].Value;
                     int year = int.Parse(dateMatch.Groups[3].Value);
-                    DateTime creationDate = new DateTime(year, GetMonthNumber(monthString), day);
+                    DateTime creationDate = new DateTime(year, MonthNumberHelper.GetMonthNumber(monthString), day);
                     IA.CreationDate = creationDate;
                 }
             }
@@ -56,30 +60,7 @@ namespace ParserRobot.DAL.Readers
             }
             else IsCorrectData = false;
 
-            //if (_result.Count == 0) IsCorrectData = false;
-            //else IsCorrectData = true;
-
-            return null/*_result*/;
-        }
-
-        private int GetMonthNumber(string monthString)
-        {
-            switch (monthString.ToLower())
-            {
-                case "января": return 1;
-                case "февраля": return 2;
-                case "марта": return 3;
-                case "апреля": return 4;
-                case "мая": return 5;
-                case "июня": return 6;
-                case "июля": return 7;
-                case "августа": return 8;
-                case "сентября": return 9;
-                case "октября": return 10;
-                case "ноября": return 11;
-                case "декабря": return 12;
-                default: throw new ArgumentException("Недопустимое название месяца: " + monthString);
-            }
+            return null;
         }
     }
 }
