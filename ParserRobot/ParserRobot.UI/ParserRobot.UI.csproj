@@ -122,6 +122,9 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Reports\Reports IA\Report InternetAcquiring 29.06.2023.xls" />
+    <None Include="Reports\Reports IA\Report MerchantAcquiring 30.06.2023.xls" />
+    <None Include="Reports\Reports MA\Report MerchantAcquiring 29.06.2023.xls" />
+    <None Include="Reports\Reports MA\Report MerchantAcquiring 30.06.2023.xls" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -132,15 +135,17 @@
       <Name>ParserRobot.BLL</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Reports\Reports MA\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Errors\Errors 27.06.2023\РЕГИСТРАЦИЯ %28ONLINER.BY%29 ИЭError.txt" />
     <Resource Include="Errors\Errors 27.06.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Errors\Errors 29.06.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Errors\Errors 30.06.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
+    <Resource Include="Errors\Errors 30.06.2023\РЕГИСТРАЦИЯ XDWA23 ТЭError.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

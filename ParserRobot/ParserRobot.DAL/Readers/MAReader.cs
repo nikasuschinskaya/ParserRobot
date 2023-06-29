@@ -2,11 +2,7 @@
 using ParserRobot.DAL.ModelsDAO;
 using ParserRobot.DAL.Readers.Base;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace ParserRobot.DAL.Readers
 {
@@ -46,16 +42,14 @@ namespace ParserRobot.DAL.Readers
                 Match expirationDateMatch = Regex.Match(match.Groups[9].Value, datePattern);
 
                 if (match.Groups[1].Success) MA.Id = Guid.Parse(match.Groups[1].Value);
-                else if (match.Groups[2].Success) MA.DayLimit = int.Parse(match.Groups[2].Value);
-                else if (match.Groups[3].Success) MA.AmountPerDay = decimal.Parse(match.Groups[3].Value);
-                else if (match.Groups[4].Success) MA.MonthLimit = int.Parse(match.Groups[4].Value);
-                else if (match.Groups[5].Success) MA.AmountPerMonth = decimal.Parse(match.Groups[5].Value);
-                else if (match.Groups[6].Success) MA.Adress = match.Groups[6].Value;
-                //else if (match.Groups[7].Success) MA.InstallationDate = match.Groups[7].Value;
-                else if (match.Groups[8].Success) MA.License = match.Groups[8].Value;
-                //else if (match.Groups[9].Success) MA.LicenseExpirationDate = match.Groups[9].Value;
+                if (match.Groups[2].Success) MA.DayLimit = int.Parse(match.Groups[2].Value);
+                if (match.Groups[3].Success) MA.AmountPerDay = decimal.Parse(match.Groups[3].Value);
+                if (match.Groups[4].Success) MA.MonthLimit = int.Parse(match.Groups[4].Value);
+                if (match.Groups[5].Success) MA.AmountPerMonth = decimal.Parse(match.Groups[5].Value);
+                if (match.Groups[6].Success) MA.Adress = match.Groups[6].Value;
+                if (match.Groups[8].Success) MA.License = match.Groups[8].Value;
 
-                else if (installationDateMatch.Success)
+                if (installationDateMatch.Success)
                 {
                     int day = int.Parse(installationDateMatch.Groups[1].Value);
                     string monthString = installationDateMatch.Groups[2].Value;
@@ -63,7 +57,7 @@ namespace ParserRobot.DAL.Readers
                     DateTime installationDate = new DateTime(year, MonthNumberHelper.GetMonthNumber(monthString), day);
                     MA.InstallationDate = installationDate;
                 }
-                else if (expirationDateMatch.Success)
+                if (expirationDateMatch.Success)
                 {
                     int day = int.Parse(expirationDateMatch.Groups[1].Value);
                     string monthString = expirationDateMatch.Groups[2].Value;

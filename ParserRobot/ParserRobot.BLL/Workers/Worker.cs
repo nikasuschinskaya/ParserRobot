@@ -17,8 +17,12 @@ namespace ParserRobot.BLL.Workers
         private int _timeForOpenExplorer = 4000;
         private int _timeToOtherActions = 2000;
         private string _clipboardText;
+        //private string _line;
         private string _pathToDekstopDateDirectory = $"C:/Users/User/Desktop/{DateTime.Now.ToShortDateString()}";
+        private string _pathWithSaveReadFileNames = "FileNames/ReadFileNames.txt";
+        //private List<string> _saveReadFileLines = new List<string>();
         private List<InternetAcquiring> _internetAcquirings = new List<InternetAcquiring>();
+        private List<MerchantAcquiring> _merchantAcquiring = new List<MerchantAcquiring>();
 
         public async Task StartWorkAsync()
         {
@@ -40,12 +44,11 @@ namespace ParserRobot.BLL.Workers
 
             List<string> fileNames = Directory.GetFiles(_pathToDekstopDateDirectory)
                                               .Select(x => Path.GetFileNameWithoutExtension(x))
+                                              .Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ИЭ") ||
+                                                     file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ТЭ"))
                                               .ToList();
 
-            List<string> IAfiles = fileNames.Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ИЭ")).ToList();
-            List<string> MAfiles = fileNames.Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ТЭ")).ToList();
-
-            foreach (string file in IAfiles)
+            foreach (string file in fileNames)
             {
                 AutoItX.Send("^f");
                 Thread.Sleep(_timeToOtherActions);
@@ -58,7 +61,6 @@ namespace ParserRobot.BLL.Workers
                 Thread.Sleep(_timeToOtherActions);
                 AutoItX.Send("{ENTER}");
                 Thread.Sleep(_timeToOtherActions);
-
                 AutoItX.Send("^a");
                 Thread.Sleep(_timeToOtherActions);
                 AutoItX.Send("^c");
@@ -66,28 +68,73 @@ namespace ParserRobot.BLL.Workers
                 _clipboardText = AutoItX.ClipGet();
                 Thread.Sleep(_timeToOtherActions);
                 Debug.WriteLine(_clipboardText);
-                IAReader iAReader = new IAReader();
 
-                _internetAcquirings.Add(iAReader.Read(_clipboardText));
-
-                if (iAReader.IsCorrectData)
+                if (file.EndsWith("ИЭ"))
                 {
-                    IAWriter iAWriter = new IAWriter();
-                    iAWriter.Write(_internetAcquirings);
+                    IAReader iAReader = new IAReader();
+                    _internetAcquirings.Add(iAReader.Read(_clipboardText));
+                    if (iAReader.IsCorrectData)
+                    {
+                        IAWriter iAWriter = new IAWriter();
+                        iAWriter.Write(_internetAcquirings);
+                    }
+                    else await GetErrorData(file);
+                    Debug.WriteLine(iAReader.IsCorrectData);
                 }
                 else
                 {
-                    string sourcePath = $"{_pathToDekstopDateDirectory}/{file}.txt";
-                    string destinationPath = $"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/Errors/Errors {DateTime.Now.ToShortDateString()}/{file}Error.txt";
-
-                    Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
-                    File.Copy(sourcePath, destinationPath, overwrite: true);
+                    MAReader maReader = new MAReader();
+                    _merchantAcquiring.Add(maReader.Read(_clipboardText));
+                    if (maReader.IsCorrectData)
+                    {
+                        MAWriter maWriter = new MAWriter();
+                        maWriter.Write(_merchantAcquiring);
+                    }
+                    else await GetErrorData(file);
+                    Debug.WriteLine(maReader.IsCorrectData);
                 }
-
-                Debug.WriteLine(iAReader.IsCorrectData);
                 AutoItX.WinKill($"{file}");
-
             }
+
+            //List<string> IAfiles = fileNames.Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ИЭ")).ToList();
+            //List<string> MAfiles = fileNames.Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ТЭ")).ToList();
+
+            //foreach (string file in IAfiles)
+            //{
+            //    AutoItX.Send("^f");
+            //    Thread.Sleep(_timeToOtherActions);
+            //    AutoItX.Send(file);
+            //    AutoItX.Send("{ENTER}");
+            //    Thread.Sleep(_timeToOtherActions);
+            //    AutoItX.Send("{DOWN}");
+            //    Thread.Sleep(_timeToOtherActions);
+            //    AutoItX.Send("{DOWN}");
+            //    Thread.Sleep(_timeToOtherActions);
+            //    AutoItX.Send("{ENTER}");
+            //    Thread.Sleep(_timeToOtherActions);
+
+            //    AutoItX.Send("^a");
+            //    Thread.Sleep(_timeToOtherActions);
+            //    AutoItX.Send("^c");
+            //    Thread.Sleep(_timeToOtherActions);
+            //    _clipboardText = AutoItX.ClipGet();
+            //    Thread.Sleep(_timeToOtherActions);
+            //    Debug.WriteLine(_clipboardText);
+            //    IAReader iAReader = new IAReader();
+
+            //    _internetAcquirings.Add(iAReader.Read(_clipboardText));
+
+            //    if (iAReader.IsCorrectData)
+            //    {
+            //        IAWriter iAWriter = new IAWriter();
+            //        iAWriter.Write(_internetAcquirings);
+            //    }
+            //    else await GetErrorData(file);
+
+            //    Debug.WriteLine(iAReader.IsCorrectData);
+            //    AutoItX.WinKill($"{file}");
+
+            //}
 
             //Thread.Sleep(_timeToOtherActions);
 
@@ -98,6 +145,15 @@ namespace ParserRobot.BLL.Workers
 
 
 
+        }
+
+        private async Task GetErrorData(string fileName)
+        {
+            string sourcePath = $"{_pathToDekstopDateDirectory}/{fileName}.txt";
+            string destinationPath = $"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/Errors/Errors {DateTime.Now.ToShortDateString()}/{fileName}Error.txt";
+
+            Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
+            await Task.Run(() => File.Copy(sourcePath, destinationPath, overwrite: true));
         }
     }
 }
