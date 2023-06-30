@@ -90,7 +90,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Commands\RelayCommand.cs" />
-    <Compile Include="Container\ContainerConfig.cs" />
     <Compile Include="ViewModels\Base\BaseViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
     <Compile Include="Views\MainWindow.xaml.cs">
@@ -122,7 +121,7 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Include="Reports\Reports IA\Report InternetAcquiring 29.06.2023.xls" />
-    <None Include="Reports\Reports IA\Report MerchantAcquiring 30.06.2023.xls" />
+    <None Include="Reports\Reports IA\Report InternetAcquiring 30.06.2023.xls" />
     <None Include="Reports\Reports MA\Report MerchantAcquiring 29.06.2023.xls" />
     <None Include="Reports\Reports MA\Report MerchantAcquiring 30.06.2023.xls" />
   </ItemGroup>
@@ -135,7 +134,9 @@
       <Name>ParserRobot.BLL</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Errors\Errors 01.07.2023\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="Errors\Errors 27.06.2023\РЕГИСТРАЦИЯ %28ONLINER.BY%29 ИЭError.txt" />
     <Resource Include="Errors\Errors 27.06.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
