@@ -13,17 +13,33 @@ namespace ConsoleApp1
     internal class Program
     {
         private static string _pathToDekstopDateDirectory = $"C:/Users/User/Desktop/{DateTime.Now.ToShortDateString()}";
+        private static string _pathWithSaveReadFileNames = "C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.BLL/FileNames/ReadFileNames.txt";
+
         static void Main(string[] args)
         {
             //TestingIA();
             //TestingMA();
 
-            List<string> fileNames = Directory.GetFiles(_pathToDekstopDateDirectory)
-                                         .Select(x => Path.GetFileNameWithoutExtension(x))
-                                         .Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ИЭ") ||
-                                                file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ТЭ"))
-                                         .ToList();
-            foreach (var item in fileNames)
+            //List<string> fileNames = Directory.GetFiles(_pathToDekstopDateDirectory)
+            //                             .Select(x => Path.GetFileNameWithoutExtension(x))
+            //                             .Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ИЭ") ||
+            //                                    file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ТЭ"))
+            //                             .ToList();
+            //foreach (var item in fileNames)
+            //{
+            //    Console.WriteLine(item);
+            //}
+
+            using (StreamWriter writer = new StreamWriter(_pathWithSaveReadFileNames))
+            {
+                // Записываем строки в файл
+                writer.WriteLine("Первая строка");
+                writer.WriteLine("Вторая строка");
+                writer.WriteLine("Третья строка");
+            }
+
+            List<string> existingFileNames = File.ReadAllLines(_pathWithSaveReadFileNames).ToList();
+            foreach (var item in existingFileNames)
             {
                 Console.WriteLine(item);
             }

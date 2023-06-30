@@ -10,7 +10,8 @@ namespace ParserRobot.DAL.Writers
     public class MAWriter : IWriter<MerchantAcquiring>
     {
         private int _widthForColumns = 3800;
-        private int _widthForAColumn = 20000;
+        private int _widthForMoreBigColumns = 4500;
+        private int _widthForAColumn = 10000;
         private static string _dateString = DateTime.Now.ToShortDateString();
         private string _pathForSaveExelFile = $"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/Reports/Reports MA/Report MerchantAcquiring {_dateString}.xls";
 
@@ -30,12 +31,14 @@ namespace ParserRobot.DAL.Writers
             xlsSheet["I1"].Value = "Дата окончания лицензии";
 
             xlsSheet.Columns[0].Width = _widthForAColumn;
-            xlsSheet.Columns[2].Width = _widthForColumns;
+            xlsSheet.Columns[1].Width = _widthForColumns;
+            xlsSheet.Columns[2].Width = _widthForMoreBigColumns;
             xlsSheet.Columns[3].Width = _widthForColumns;
-            xlsSheet.Columns[4].Width = _widthForColumns;
-            xlsSheet.Columns[5].Width = _widthForColumns;
+            xlsSheet.Columns[4].Width = _widthForMoreBigColumns;
+            xlsSheet.Columns[5].Width = _widthForAColumn + _widthForColumns;
             xlsSheet.Columns[6].Width = _widthForColumns;
             xlsSheet.Columns[7].Width = _widthForColumns;
+            xlsSheet.Columns[8].Width = _widthForAColumn - _widthForColumns;
 
             for (int i = 0; i < models.Count(); i++)
             {
