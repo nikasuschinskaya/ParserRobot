@@ -1,10 +1,10 @@
 ﻿using AutoIt;
+using Microsoft.Extensions.Logging;
 using ParserRobot.DAL.ModelsDAO;
-using ParserRobot.DAL.Readers;
-using ParserRobot.DAL.Writers;
+using ParserRobot.DAL.Readers.Base;
+using ParserRobot.DAL.Writers.Base;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -14,8 +14,15 @@ namespace ParserRobot.BLL.Workers
 {
     public class Worker
     {
+        private readonly IReader<InternetAcquiring> _iaReader;
+        private readonly IReader<MerchantAcquiring> _maReader;
+        private readonly IWriter<InternetAcquiring> _iaWriter;
+        private readonly IWriter<MerchantAcquiring> _maWriter;
+        private readonly ILogger<Worker> _logger;
+
         private int _timeToOtherActions = 2000;
         private int _timeToWaitNewFiles = 1800000;
+        //private int _timeToWaitNewFiles = 30000;
 
         private string _clipboardText;
         private string _pathToDekstopDateDirectory = $"C:/Users/User/Desktop/{DateTime.Now.ToShortDateString()}";
@@ -28,24 +35,51 @@ namespace ParserRobot.BLL.Workers
         private List<InternetAcquiring> _internetAcquirings = new List<InternetAcquiring>();
         private List<MerchantAcquiring> _merchantAcquiring = new List<MerchantAcquiring>();
 
+        public Worker(ILogger<Worker> logger,
+                      IReader<InternetAcquiring> iaReader,
+                      IReader<MerchantAcquiring> maReader,
+                      IWriter<InternetAcquiring> iaWriter,
+                      IWriter<MerchantAcquiring> maWriter)
+        {
+            _logger = logger;
+            _iaReader = iaReader;
+            _maReader = maReader;
+            _iaWriter = iaWriter;
+            _maWriter = maWriter;
+        }
+
         public async Task StartWorkAsync()
         {
             AutoItX.Send("^{ESC}");
+            _logger.LogInformation("Открытие Пуска");
             Thread.Sleep(_timeToOtherActions);
 
             AutoItX.Send(_dateNowString);
+            _logger.LogInformation("Ввод в строку поиска сегодняшней даты");
             Thread.Sleep(_timeToOtherActions);
 
             AutoItX.Send("{ENTER}");
+            _logger.LogInformation($"Переход в папку с названием {_dateNowString}");
             Thread.Sleep(_timeToOtherActions);
 
-            _fileNames = Directory.GetFiles(_pathToDekstopDateDirectory)
-                                  .Select(x => Path.GetFileNameWithoutExtension(x))
-                                  .Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ИЭ") ||
-                                         file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ТЭ"))
-                                  .ToList();
+            while (true)
+            {
+                _logger.LogInformation("Ищу файлы для обработки");
+                await SearchFilesToProcess();
 
-            if(!IsFileExists(_pathWithSaveReadFileNames)) File.Create(_pathWithSaveReadFileNames);
+                _logger.LogInformation("Файлов для обработки нет. Засыпаю на 30 мин");
+                await Task.Delay(_timeToWaitNewFiles);
+            }
+        }
+
+        private async Task SearchFilesToProcess()
+        {
+            _fileNames = Directory.GetFiles(_pathToDekstopDateDirectory)
+                              .Select(x => Path.GetFileNameWithoutExtension(x))
+                              .Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && (file.EndsWith("ИЭ") || file.EndsWith("ТЭ")))
+                              .ToList();
+
+            if (!IsFileExists(_pathWithSaveReadFileNames)) File.Create(_pathWithSaveReadFileNames).Close();
 
             _processedFiles = File.ReadAllLines(_pathWithSaveReadFileNames).ToList();
 
@@ -53,63 +87,72 @@ namespace ParserRobot.BLL.Workers
             {
                 if (!_processedFiles.Contains(file))
                 {
+                    _logger.LogInformation($"Начинаю обработку файла {file}");
                     await WriteAtFile(_pathWithSaveReadFileNames, file);
-
-                    AutoItX.Send("^f");
-                    Thread.Sleep(_timeToOtherActions);
-
-                    AutoItX.Send(file);
-                    AutoItX.Send("{ENTER}");
-                    Thread.Sleep(_timeToOtherActions);
-
-                    AutoItX.Send("{DOWN}");
-                    Thread.Sleep(_timeToOtherActions);
-
-                    AutoItX.Send("{DOWN}");
-                    Thread.Sleep(_timeToOtherActions);
-
-                    AutoItX.Send("{ENTER}");
-                    Thread.Sleep(_timeToOtherActions);
-
-                    AutoItX.Send("^a");
-                    Thread.Sleep(_timeToOtherActions);
-
-                    AutoItX.Send("^c");
-                    Thread.Sleep(_timeToOtherActions);
-
-                    _clipboardText = AutoItX.ClipGet();
-                    Thread.Sleep(_timeToOtherActions);
-
-                    Debug.WriteLine(_clipboardText);
-
-                    if (file.EndsWith("ИЭ"))
-                    {
-                        IAReader iAReader = new IAReader();
-                        _internetAcquirings.Add(iAReader.Read(_clipboardText));
-                        if (iAReader.IsCorrectData)
-                        {
-                            IAWriter iAWriter = new IAWriter();
-                            iAWriter.Write(_internetAcquirings);
-                        }
-                        else await GetErrorData(file);
-                        Debug.WriteLine(iAReader.IsCorrectData);
-                    }
-                    else
-                    {
-                        MAReader maReader = new MAReader();
-                        _merchantAcquiring.Add(maReader.Read(_clipboardText));
-                        if (maReader.IsCorrectData)
-                        {
-                            MAWriter maWriter = new MAWriter();
-                            maWriter.Write(_merchantAcquiring);
-                        }
-                        else await GetErrorData(file);
-                        Debug.WriteLine(maReader.IsCorrectData);
-                    }
-                    AutoItX.WinKill($"{file}");
+                    await ProcessFile(file);
                 }
-                else Thread.Sleep(_timeToWaitNewFiles);
             }
+        }
+
+        private async Task ProcessFile(string file)
+        {
+            AutoItX.Send("^f");
+            _logger.LogInformation("Активация строки поиска в проводнике");
+            Thread.Sleep(_timeToOtherActions);
+
+            AutoItX.Send(file);
+            _logger.LogInformation("Ввод в строку поиска названия нужного файла");
+            AutoItX.Send("{ENTER}");
+            _logger.LogInformation("Нажимаем клавишу ENTER");
+            Thread.Sleep(_timeToOtherActions);
+
+            AutoItX.Send("{DOWN}");
+            _logger.LogInformation("Нажимаем клавишу DOWN");
+            Thread.Sleep(_timeToOtherActions);
+
+            AutoItX.Send("{DOWN}");
+            _logger.LogInformation("Нажимаем клавишу DOWN");
+            Thread.Sleep(_timeToOtherActions);
+
+            AutoItX.Send("{ENTER}");
+            _logger.LogInformation("Нажимаем клавишу ENTER");
+            Thread.Sleep(_timeToOtherActions);
+
+            AutoItX.Send("^a");
+            _logger.LogInformation("Нажимаем сочетание клавиш Сrtl+A");
+            Thread.Sleep(_timeToOtherActions);
+
+            AutoItX.Send("^c");
+            _logger.LogInformation("Нажимаем сочетание клавиш Сrtl+C");
+            Thread.Sleep(_timeToOtherActions);
+
+            _clipboardText = AutoItX.ClipGet();
+            _logger.LogInformation("Получаем данные из буфера обмена");
+            _logger.LogInformation(_clipboardText);
+            Thread.Sleep(_timeToOtherActions);
+
+            _logger.LogInformation("Проверка по какому шаблону нужно обработать данный файл (ИЭ или ТЭ)");
+            if (file.EndsWith("ИЭ"))
+            {
+                _internetAcquirings.Add(_iaReader.Read(_clipboardText));
+
+                if (_iaReader.IsCorrectData) _iaWriter.Write(_internetAcquirings);
+                else await GetErrorData(file);
+
+                _logger.LogInformation($"Коректность данных в файле {file}: {_iaReader.IsCorrectData}");
+            }
+            else
+            {
+                _merchantAcquiring.Add(_maReader.Read(_clipboardText));
+
+                if (_maReader.IsCorrectData) _maWriter.Write(_merchantAcquiring);
+                else await GetErrorData(file);
+
+                _logger.LogInformation($"Коректность данных в файле {file}: {_maReader.IsCorrectData}");
+            }
+
+            AutoItX.WinKill($"{file}");
+            _logger.LogInformation($"Закрываем окно файла {file}");
         }
 
         private async Task GetErrorData(string fileName)
@@ -133,8 +176,9 @@ namespace ParserRobot.BLL.Workers
                     writer.Close();
                 }
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
+                _logger.LogError($"Ошибка при записи в файл: {ex.Message}");
                 throw new Exception($"Ошибка при записи в файл: {ex.Message}");
             }
         }
