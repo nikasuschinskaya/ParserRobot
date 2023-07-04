@@ -20,7 +20,10 @@ namespace ParserRobot.BLL.Workers
         private string _clipboardText;
         private string _pathToDekstopDateDirectory = $"C:/Users/User/Desktop/{DateTime.Now.ToShortDateString()}";
         private string _dateNowString = DateTime.Now.ToShortDateString();
-        private string _pathWithSaveReadFileNames = "C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.BLL/FileNames/ReadFileNames.txt";
+        private string _pathWithSaveReadFileNames = $"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/HistoryReadFiles/ReadFileNames {DateTime.Now.ToShortDateString()}.txt";
+
+        private List<string> _processedFiles = new List<string>();
+        private List<string> _fileNames = new List<string>();
 
         private List<InternetAcquiring> _internetAcquirings = new List<InternetAcquiring>();
         private List<MerchantAcquiring> _merchantAcquiring = new List<MerchantAcquiring>();
@@ -36,17 +39,19 @@ namespace ParserRobot.BLL.Workers
             AutoItX.Send("{ENTER}");
             Thread.Sleep(_timeToOtherActions);
 
-            List<string> fileNames = Directory.GetFiles(_pathToDekstopDateDirectory)
-                                              .Select(x => Path.GetFileNameWithoutExtension(x))
-                                              .Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ИЭ") ||
-                                                     file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ТЭ"))
-                                              .ToList();
+            _fileNames = Directory.GetFiles(_pathToDekstopDateDirectory)
+                                  .Select(x => Path.GetFileNameWithoutExtension(x))
+                                  .Where(file => file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ИЭ") ||
+                                         file.StartsWith("РЕГИСТРАЦИЯ") && file.EndsWith("ТЭ"))
+                                  .ToList();
 
-            List<string> existingFileNames = File.ReadAllLines(_pathWithSaveReadFileNames).ToList();
+            if(!IsFileExists(_pathWithSaveReadFileNames)) File.Create(_pathWithSaveReadFileNames);
 
-            foreach (string file in fileNames)
+            _processedFiles = File.ReadAllLines(_pathWithSaveReadFileNames).ToList();
+
+            foreach (string file in _fileNames)
             {
-                if (!existingFileNames.Contains(file))
+                if (!_processedFiles.Contains(file))
                 {
                     await WriteAtFile(_pathWithSaveReadFileNames, file);
 
@@ -116,6 +121,8 @@ namespace ParserRobot.BLL.Workers
             await Task.Run(() => File.Copy(sourcePath, destinationPath, overwrite: true));
         }
 
+        private bool IsFileExists(string file) => File.Exists(file);
+
         private async Task WriteAtFile(string filePath, string fileName)
         {
             try
@@ -123,6 +130,7 @@ namespace ParserRobot.BLL.Workers
                 using (StreamWriter writer = new StreamWriter(filePath, append: true))
                 {
                     await writer.WriteLineAsync(fileName);
+                    writer.Close();
                 }
             }
             catch (Exception ex) 

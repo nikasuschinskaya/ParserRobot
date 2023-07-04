@@ -8,7 +8,9 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("errors/errors%2029.06.2023/%d0%a0%d0%95%d0%93%d0%98%d0%a1%d0%a2%d0%a0%d0%90%d0%a6" +
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("errors/errors%2004.07.2023/%d0%a0%d0%95%d0%93%d0%98%d0%a1%d0%a2%d0%a0%d0%90%d0%a6" +
     "%d0%98%d0%af%20(%d0%a2%d0%95%d0%a1%d0%a2%d0%9e.by)%20%d0%98%d0%aderror.txt")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("errors/errors%2004.07.2023/%d0%a0%d0%95%d0%93%d0%98%d0%a1%d0%a2%d0%a0%d0%90%d0%a6" +
+    "%d0%98%d0%af%20xdwa23%20%d0%a2%d0%aderror.txt")]
 
 

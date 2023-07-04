@@ -120,8 +120,10 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <None Include="Reports\Reports IA\Report InternetAcquiring 04.07.2023.xls" />
     <None Include="Reports\Reports IA\Report InternetAcquiring 29.06.2023.xls" />
     <None Include="Reports\Reports IA\Report InternetAcquiring 30.06.2023.xls" />
+    <None Include="Reports\Reports MA\Report MerchantAcquiring 04.07.2023.xls" />
     <None Include="Reports\Reports MA\Report MerchantAcquiring 29.06.2023.xls" />
     <None Include="Reports\Reports MA\Report MerchantAcquiring 30.06.2023.xls" />
   </ItemGroup>
@@ -134,9 +136,7 @@
       <Name>ParserRobot.BLL</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Errors\Errors 01.07.2023\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Resource Include="Errors\Errors 27.06.2023\РЕГИСТРАЦИЯ %28ONLINER.BY%29 ИЭError.txt" />
     <Resource Include="Errors\Errors 27.06.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
@@ -147,6 +147,13 @@
   <ItemGroup>
     <Resource Include="Errors\Errors 30.06.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
     <Resource Include="Errors\Errors 30.06.2023\РЕГИСТРАЦИЯ XDWA23 ТЭError.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="HistoryReadFiles\ReadFileNames 04.07.2023.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Errors\Errors 04.07.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
+    <Resource Include="Errors\Errors 04.07.2023\РЕГИСТРАЦИЯ XDWA23 ТЭError.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
