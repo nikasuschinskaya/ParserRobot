@@ -156,6 +156,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -217,11 +218,13 @@
     <None Include="Reports\Reports IA\Report InternetAcquiring 04.07.2023.xls" />
     <None Include="Reports\Reports IA\Report InternetAcquiring 05.07.2023.xls" />
     <None Include="Reports\Reports IA\Report InternetAcquiring 07.07.2023.xls" />
+    <None Include="Reports\Reports IA\Report InternetAcquiring 08.07.2023.xls" />
     <None Include="Reports\Reports IA\Report InternetAcquiring 29.06.2023.xls" />
     <None Include="Reports\Reports IA\Report InternetAcquiring 30.06.2023.xls" />
     <None Include="Reports\Reports MA\Report MerchantAcquiring 04.07.2023.xls" />
     <None Include="Reports\Reports MA\Report MerchantAcquiring 05.07.2023.xls" />
     <None Include="Reports\Reports MA\Report MerchantAcquiring 07.07.2023.xls" />
+    <None Include="Reports\Reports MA\Report MerchantAcquiring 08.07.2023.xls" />
     <None Include="Reports\Reports MA\Report MerchantAcquiring 29.06.2023.xls" />
     <None Include="Reports\Reports MA\Report MerchantAcquiring 30.06.2023.xls" />
   </ItemGroup>
@@ -266,6 +269,13 @@
   <ItemGroup>
     <Resource Include="Errors\Errors 07.07.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
     <Resource Include="Errors\Errors 07.07.2023\РЕГИСТРАЦИЯ XDWA23 ТЭError.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="HistoryReadFiles\ReadFileNames 08.07.2023.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Errors\Errors 08.07.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
+    <Resource Include="Errors\Errors 08.07.2023\РЕГИСТРАЦИЯ XDWA23 ТЭError.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

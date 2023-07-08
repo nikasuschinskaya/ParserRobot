@@ -3,6 +3,8 @@ using Microsoft.Extensions.Logging;
 using ParserRobot.BLL.Workers;
 using ParserRobot.UI.Commands;
 using ParserRobot.UI.ViewModels.Base;
+using System.Globalization;
+using System.Windows.Forms;
 using System.Windows.Input;
 
 namespace ParserRobot.UI.ViewModels
@@ -26,6 +28,7 @@ namespace ParserRobot.UI.ViewModels
 
         private async void StartButtonClicked(object parameter)
         {
+            InputLanguage.CurrentInputLanguage = InputLanguage.FromCulture(new CultureInfo("en-US"));
             _logger.LogInformation("Робот начал работу");
             await _worker.StartWorkAsync();
         }
