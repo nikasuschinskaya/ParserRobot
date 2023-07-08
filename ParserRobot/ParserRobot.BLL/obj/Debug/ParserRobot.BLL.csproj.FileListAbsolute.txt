@@ -88,3 +88,11 @@ C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\Ser
 C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\Serilog.Sinks.RollingFile.xml
 C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\Autofac.dll
 C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\Autofac.xml
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\System.Security.AccessControl.dll
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\System.Security.Permissions.dll
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\System.Security.Principal.Windows.dll
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\System.Configuration.ConfigurationManager.xml
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\System.Security.AccessControl.xml
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\System.Security.Permissions.xml
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.BLL\bin\Debug\System.Security.Principal.Windows.xml

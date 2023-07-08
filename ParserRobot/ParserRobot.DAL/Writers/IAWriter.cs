@@ -1,8 +1,10 @@
 ﻿using IronXL;
 using ParserRobot.DAL.ModelsDAO;
+using ParserRobot.DAL.Registrators;
 using ParserRobot.DAL.Writers.Base;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 
 namespace ParserRobot.DAL.Writers
@@ -12,7 +14,7 @@ namespace ParserRobot.DAL.Writers
         private int _widthForColumns = 3800;
         private int _widthForAColumn = 20000;
         private static string _dateString = DateTime.Now.ToShortDateString();
-        private string _pathForSaveExelFile = $"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/Reports/Reports IA/Report InternetAcquiring {_dateString}.xls";
+        private string _pathForSaveExelFile = ConfigurationManager.AppSettings["reportsIAPath"].ToString() + $"Report InternetAcquiring {_dateString}.xls";
 
         public void Write(List<InternetAcquiring> models)
         {

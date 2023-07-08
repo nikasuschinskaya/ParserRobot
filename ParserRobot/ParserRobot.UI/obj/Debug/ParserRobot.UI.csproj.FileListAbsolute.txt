@@ -101,3 +101,11 @@ C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\Seri
 C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\Serilog.Sinks.Console.xml
 C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\Serilog.Sinks.File.xml
 C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\Serilog.Sinks.RollingFile.xml
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\System.Configuration.ConfigurationManager.dll
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\System.Security.AccessControl.dll
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\System.Security.Permissions.dll
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\System.Security.Principal.Windows.dll
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\System.Configuration.ConfigurationManager.xml
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\System.Security.AccessControl.xml
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\System.Security.Permissions.xml
+C:\Users\User\source\repos\ParserRobot\ParserRobot\ParserRobot.UI\bin\Debug\System.Security.Principal.Windows.xml

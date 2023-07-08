@@ -5,8 +5,10 @@ using ParserRobot.DAL.Readers.Base;
 using ParserRobot.DAL.Writers.Base;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,13 +23,13 @@ namespace ParserRobot.BLL.Workers
         private readonly ILogger<Worker> _logger;
 
         private int _timeToOtherActions = 2000;
-        private int _timeToWaitNewFiles = 1800000;
-        //private int _timeToWaitNewFiles = 30000;
+        //private int _timeToWaitNewFiles = 1800000;
+        private int _timeToWaitNewFiles = 30000;
 
         private string _clipboardText;
-        private string _pathToDekstopDateDirectory = $"C:/Users/User/Desktop/{DateTime.Now.ToShortDateString()}";
+        private string _pathToDekstopDateDirectory;
         private string _dateNowString = DateTime.Now.ToShortDateString();
-        private string _pathWithSaveReadFileNames = $"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/HistoryReadFiles/ReadFileNames {DateTime.Now.ToShortDateString()}.txt";
+        private string _pathWithSaveReadFileNames;
 
         private List<string> _processedFiles = new List<string>();
         private List<string> _fileNames = new List<string>();
@@ -46,20 +48,16 @@ namespace ParserRobot.BLL.Workers
             _maReader = maReader;
             _iaWriter = iaWriter;
             _maWriter = maWriter;
+            _pathToDekstopDateDirectory = ConfigurationManager.AppSettings["dekstopPath"].ToString() + _dateNowString;
+            _pathWithSaveReadFileNames = ConfigurationManager.AppSettings["historyPath"].ToString() + $"ReadFileNames {_dateNowString}.txt";
         }
 
         public async Task StartWorkAsync()
         {
-            AutoItX.Send("^{ESC}");
-            _logger.LogInformation("Открытие Пуска");
-            Thread.Sleep(_timeToOtherActions);
+            //AutoItX.AutoItSetOption("SendKeyDelay", 1000);
 
-            AutoItX.Send(_dateNowString);
-            _logger.LogInformation("Ввод в строку поиска сегодняшней даты");
-            Thread.Sleep(_timeToOtherActions);
-
-            AutoItX.Send("{ENTER}");
-            _logger.LogInformation($"Переход в папку с названием {_dateNowString}");
+            AutoItX.Run("explorer.exe", "");
+            _logger.LogInformation($"Открытие проводника");
             Thread.Sleep(_timeToOtherActions);
 
             while (true)
@@ -87,6 +85,12 @@ namespace ParserRobot.BLL.Workers
             {
                 if (!_processedFiles.Contains(file))
                 {
+                    if (AutoItX.WinExists("Главная") == 0)
+                    {
+                        AutoItX.Run("explorer.exe", "");
+                        _logger.LogInformation($"Открытие проводника");
+                        Thread.Sleep(_timeToOtherActions);
+                    }
                     _logger.LogInformation($"Начинаю обработку файла {file}");
                     await WriteAtFile(_pathWithSaveReadFileNames, file);
                     await ProcessFile(file);
@@ -96,24 +100,12 @@ namespace ParserRobot.BLL.Workers
 
         private async Task ProcessFile(string file)
         {
-            AutoItX.Send("^f");
-            _logger.LogInformation("Активация строки поиска в проводнике");
+            AutoItX.Send("^l");
+            _logger.LogInformation("Активация строки поиска");
             Thread.Sleep(_timeToOtherActions);
 
-            AutoItX.Send(file);
+            AutoItX.Send($"{_pathToDekstopDateDirectory}/{file}.txt");
             _logger.LogInformation("Ввод в строку поиска названия нужного файла");
-            AutoItX.Send("{ENTER}");
-            _logger.LogInformation("Нажимаем клавишу ENTER");
-            Thread.Sleep(_timeToOtherActions);
-
-            AutoItX.Send("{DOWN}");
-            _logger.LogInformation("Нажимаем клавишу DOWN");
-            Thread.Sleep(_timeToOtherActions);
-
-            AutoItX.Send("{DOWN}");
-            _logger.LogInformation("Нажимаем клавишу DOWN");
-            Thread.Sleep(_timeToOtherActions);
-
             AutoItX.Send("{ENTER}");
             _logger.LogInformation("Нажимаем клавишу ENTER");
             Thread.Sleep(_timeToOtherActions);
@@ -158,7 +150,7 @@ namespace ParserRobot.BLL.Workers
         private async Task GetErrorData(string fileName)
         {
             string sourcePath = $"{_pathToDekstopDateDirectory}/{fileName}.txt";
-            string destinationPath = $"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/Errors/Errors {_dateNowString}/{fileName}Error.txt";
+            string destinationPath = ConfigurationManager.AppSettings["errorsPath"].ToString() + $"Errors {_dateNowString}/{fileName}Error.txt";
 
             Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
             await Task.Run(() => File.Copy(sourcePath, destinationPath, overwrite: true));

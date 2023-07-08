@@ -3,6 +3,7 @@ using ParserRobot.DAL.ModelsDAO;
 using ParserRobot.DAL.Writers.Base;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 
 namespace ParserRobot.DAL.Writers
@@ -13,7 +14,7 @@ namespace ParserRobot.DAL.Writers
         private int _widthForMoreBigColumns = 4500;
         private int _widthForAColumn = 10000;
         private static string _dateString = DateTime.Now.ToShortDateString();
-        private string _pathForSaveExelFile = $"C:/Users/User/source/repos/ParserRobot/ParserRobot/ParserRobot.UI/Reports/Reports MA/Report MerchantAcquiring {_dateString}.xls";
+        private string _pathForSaveExelFile = ConfigurationManager.AppSettings["reportsMAPath"].ToString() + $"Report MerchantAcquiring {_dateString}.xls";
 
         public void Write(List<MerchantAcquiring> models)
         {

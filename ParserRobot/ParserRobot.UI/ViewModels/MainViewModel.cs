@@ -24,10 +24,10 @@ namespace ParserRobot.UI.ViewModels
             OnClickStartButton = new RelayCommand(StartButtonClicked);
         }
 
-        private void StartButtonClicked(object parameter)
+        private async void StartButtonClicked(object parameter)
         {
             _logger.LogInformation("Робот начал работу");
-            _worker.StartWorkAsync();
+            await _worker.StartWorkAsync();
         }
     }
 }
