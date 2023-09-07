@@ -150,7 +150,11 @@ namespace ParserRobot.BLL.Workers
         private async Task GetErrorData(string fileName)
         {
             string sourcePath = $"{_pathToDekstopDateDirectory}/{fileName}.txt";
-            string destinationPath = ConfigurationManager.AppSettings["errorsPath"].ToString() + $"Errors {_dateNowString}/{fileName}Error.txt";
+            string path = ConfigurationManager.AppSettings["errorsPath"].ToString() + $"Errors {_dateNowString}";
+            string destinationPath = $"{path}/{fileName}Error.txt";
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(path);
+            if (!directoryInfo.Exists) directoryInfo.Create();
 
             Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
             await Task.Run(() => File.Copy(sourcePath, destinationPath, overwrite: true));

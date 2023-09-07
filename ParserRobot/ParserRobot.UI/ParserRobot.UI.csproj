@@ -262,7 +262,10 @@
     <Resource Include="Errors\Errors 05.07.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
     <Resource Include="Errors\Errors 05.07.2023\РЕГИСТРАЦИЯ XDWA23 ТЭError.txt" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Errors\Errors 15.08.2023\" />
+    <Folder Include="Errors\Errors 27.07.2023\" />
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="HistoryReadFiles\ReadFileNames 07.07.2023.txt" />
   </ItemGroup>
@@ -276,6 +279,9 @@
   <ItemGroup>
     <Resource Include="Errors\Errors 08.07.2023\РЕГИСТРАЦИЯ %28ТЕСТО.BY%29 ИЭError.txt" />
     <Resource Include="Errors\Errors 08.07.2023\РЕГИСТРАЦИЯ XDWA23 ТЭError.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="HistoryReadFiles\ReadFileNames 15.08.2023.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
